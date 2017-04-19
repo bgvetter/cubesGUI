@@ -59,31 +59,6 @@ public class DB {
         }
     }
 
-
-
-
-    /*void addRecord(cubeTime cube)  {
-
-        try {
-            //add a new record in to the table
-            String insertSQL = "INSERT INTO " + TABLE_NAME + " VALUES ( ? , ? ) " ;
-            PreparedStatement insertSQLPS = conn.prepareStatement(insertSQL);
-            insertSQLPS.setString(1, cube.itemName);
-            insertSQLPS.setDouble(2, cube.solveTime);
-
-            insertSQLPS.execute();
-
-            System.out.println("Added record for " + cube.itemName);
-
-            insertSQLPS.close();
-
-
-        } catch (SQLException se) {
-            se.printStackTrace();
-        }
-
-    }*/
-
     //gets all data from table
     public static ResultSet fetchAllRecords() {
 
@@ -100,28 +75,6 @@ public class DB {
             return null;
         }
     }
-
-
-    /*public void delete(cubeTime cube) {
-        try{
-            String deleteSQLTemplate = "DELETE FROM %s where %s = ?";
-            String deleteSQL = String.format(deleteSQLTemplate,TABLE_NAME,PK_COLUMN);
-            System.out.println("The SQL for the prepared statement is :" + deleteSQL);
-            PreparedStatement deletePreparedStatement = conn.prepareStatement(deleteSQL);
-            deletePreparedStatement.setInt(1,cube.ID);
-
-            System.out.println(deletePreparedStatement.toString());
-
-            deletePreparedStatement.execute();
-
-            deletePreparedStatement.close();
-
-
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-    }*/
 
     public void addTestData() {
 
