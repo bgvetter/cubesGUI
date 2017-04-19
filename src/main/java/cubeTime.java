@@ -15,7 +15,7 @@ public class cubeTime {
 
     @Override
     public String toString() {
-        return itemName + " solved the Rubix Cube in " + solveTime+ " seconds!";
+        return itemName + " solved the Rubicks Cube in " + solveTime+ " seconds!";
     }
 
 }

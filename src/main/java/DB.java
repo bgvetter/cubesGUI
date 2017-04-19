@@ -26,7 +26,7 @@ public class DB {
 
 
     DB() {
-
+        //create the driver for accessing the db
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException cnfe) {
@@ -35,16 +35,18 @@ public class DB {
             System.exit(-1);  //No driver? Need to fix before anything else will work. So quit the program
         }
 
+        //create the connection and statement object for running queries
         try{
             conn = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, USER, PASSWORD);
             statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);}
         catch (SQLException se){
-
+            se.printStackTrace();
         }
     }
 
     void createTable() {
         try{
+            //create the table if it doesn't exist
             String createTableSQLTemplate = "CREATE TABLE IF NOT EXISTS %s (%s int NOT NULL AUTO_INCREMENT, %s VARCHAR (100), %s DOUBLE, PRIMARY KEY(%s))";
             String createTableSQL = String.format(createTableSQLTemplate, TABLE_NAME,PK_COLUMN, NAME_COL, TIME_COL,PK_COLUMN);
 
@@ -60,10 +62,10 @@ public class DB {
 
 
 
-    void addRecord(cubeTime cube)  {
+    /*void addRecord(cubeTime cube)  {
 
         try {
-
+            //add a new record in to the table
             String insertSQL = "INSERT INTO " + TABLE_NAME + " VALUES ( ? , ? ) " ;
             PreparedStatement insertSQLPS = conn.prepareStatement(insertSQL);
             insertSQLPS.setString(1, cube.itemName);
@@ -80,10 +82,10 @@ public class DB {
             se.printStackTrace();
         }
 
-    }
+    }*/
 
-
-    ResultSet fetchAllRecords() {
+    //gets all data from table
+    public static ResultSet fetchAllRecords() {
 
         try  {
 
@@ -100,7 +102,7 @@ public class DB {
     }
 
 
-    public void delete(cubeTime cube) {
+    /*public void delete(cubeTime cube) {
         try{
             String deleteSQLTemplate = "DELETE FROM %s where %s = ?";
             String deleteSQL = String.format(deleteSQLTemplate,TABLE_NAME,PK_COLUMN);
@@ -119,7 +121,7 @@ public class DB {
         catch (SQLException e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void addTestData() {
 

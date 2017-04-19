@@ -21,20 +21,29 @@ public class cubes {
         //Create table, and add test data
         db.createTable();
 
-        db.addTestData();
-
         ResultSet cubeResultSet = null;
-        cubesModel cubeModel;
+        cubesModel cubeModel = null;
 
-        try {
-            cubeResultSet = db.fetchAllRecords();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
+        //check if there are any records, if not then add some default ones
+        boolean bRecords = false;
+        while(!bRecords) {
+            try {
+                //fetch all records into new recordset
+                cubeResultSet = db.fetchAllRecords();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
+
+            //put new recordset in to jtable model object
+            cubeModel = new cubesModel(cubeResultSet);
+
+            if (cubeModel.getRowCount() == 0) {
+                db.addTestData();}
+            else{
+                bRecords=true;
+            }
         }
-
-        cubeModel = new cubesModel(cubeResultSet);
-
         //Create and show the GUI
         GUI tableGUI = new GUI(cubeModel);
 

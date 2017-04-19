@@ -1,6 +1,5 @@
-import javax.swing.*;
+
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,8 +16,9 @@ public class cubesModel extends AbstractTableModel {
     public cubesModel(ResultSet rs) {
         this.resultSet = rs;
         try{
+            //get column count
             colCount = resultSet.getMetaData().getColumnCount();
-
+            //get row count
             countRows();
 
         } catch (SQLException se) {
@@ -26,6 +26,7 @@ public class cubesModel extends AbstractTableModel {
         }
     }
 
+    //update the model recordset with a new recordset
     public void updateResultSet(ResultSet newRS){
         resultSet = newRS;
         try{
@@ -48,20 +49,20 @@ public class cubesModel extends AbstractTableModel {
             }
 
             String getAllData = "SELECT * FROM " + DB.TABLE_NAME;
-            resultSet = DB.statement.executeQuery(getAllData);
+            resultSet = DB.fetchAllRecords();
 
             if (cubes.cubeDataModel == null) {
-                //If no current movieDataModel, then make one
+                //If no current DataModel, then make one
                 cubes.cubeDataModel = new cubesModel(resultSet);
             } else {
                 //Or, if one already exists, update its ResultSet
-                cubes.cubeDataModel.updateResultSet(resultSet);
+                updateResultSet(resultSet);
             }
 
             return true;
 
         } catch (Exception e) {
-            System.out.println("Error loading or reloading movies");
+            System.out.println("Error loading or reloading data");
             System.out.println(e);
             e.printStackTrace();
             return false;
@@ -69,6 +70,7 @@ public class cubesModel extends AbstractTableModel {
 
     }
 
+    //get row count
     private void countRows() {
         rowCount = 0;
         try {
@@ -140,7 +142,7 @@ public class cubesModel extends AbstractTableModel {
         }
     }
 
-    //returns true if successful, false if error occurs
+    //insert a new record into the recordset
     public boolean insertRow(String name, double time) {
 
         try {
@@ -155,6 +157,25 @@ public class cubesModel extends AbstractTableModel {
 
         } catch (SQLException e) {
             System.out.println("Error adding row");
+            System.out.println(e);
+            return false;
+        }
+
+    }
+
+    //updates an existing record in the recordset
+    public boolean updateRow(int rowID, String name, double time) {
+
+        try {
+            resultSet.absolute(rowID+1);
+            resultSet.updateString(DB.NAME_COL, name);
+            resultSet.updateDouble(DB.TIME_COL, time);
+            resultSet.updateRow();
+            fireTableDataChanged();
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Error updating row");
             System.out.println(e);
             return false;
         }

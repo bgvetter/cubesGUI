@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -19,18 +21,23 @@ public class GUI extends  JFrame implements WindowListener{
 
     GUI(final cubesModel cubesDataTableModel) {
 
+        //set up window
         setContentPane(rootPanel);
         pack();
-        setTitle("Movie Database Application");
+        setTitle("Rubicks Cube Tracker");
         addWindowListener(this);
+
+        setSize(new Dimension(700, 250));
+
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        //add data to jtable
         resultList.setModel(cubesDataTableModel);
-
         addListeners(cubesDataTableModel);
     }
 
+    //set up button listeners
     private void addListeners(cubesModel cubesM){
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -40,13 +47,13 @@ public class GUI extends  JFrame implements WindowListener{
                 String name = nameTF.getText();
 
                 if (name == null || name.trim().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Please enter a title for the new movie");
+                    JOptionPane.showMessageDialog(rootPane, "Please enter a name");
                     return;
                 }
 
-                //Get movie year. Check it's a number between 1900 and present year
-                double timeData;
 
+                double timeData;
+                //verify time is a number
                 try {
                     timeData = Double.parseDouble(timeTF.getText());
 
@@ -61,7 +68,7 @@ public class GUI extends  JFrame implements WindowListener{
                 boolean insertedRow = cubesM.insertRow(name, timeData);
 
                 if (!insertedRow) {
-                    JOptionPane.showMessageDialog(rootPane, "Error adding new movie");
+                    JOptionPane.showMessageDialog(rootPane, "Error adding new record");
                 }
                 // If insertedRow is true and the data was added, it should show up in the table, so no need for confirmation message.
             }
@@ -76,12 +83,32 @@ public class GUI extends  JFrame implements WindowListener{
                 if (currentRow == -1) {      // -1 means no row is selected. Display error message.
                     JOptionPane.showMessageDialog(rootPane, "Please choose a record to delete");
                 }
+                //call the delete function
                 boolean deleted = cubesM.deleteRow(currentRow);
                 if (deleted) {
+                    //reload data for jtable
                     cubesM.loadAll();
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Error deleting record");
                 }
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int currentRow = resultList.getSelectedRow();
+
+                if (currentRow == -1) {      // -1 means no row is selected. Display error message.
+                    JOptionPane.showMessageDialog(rootPane, "Please choose a record to delete");
+                    return;
+                }
+
+                //open update form
+                UpdateRecord ur = new UpdateRecord(cubesM,currentRow);
+                //close current form
+                GUI.this.dispose();
+
             }
         });
     }
